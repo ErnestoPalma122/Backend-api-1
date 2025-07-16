@@ -16,7 +16,14 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: usuario.id, correo: usuario.correo }, 'secreto', { expiresIn: '1h' });
 
-    res.json({ mensaje: 'Login exitoso', token });
+    res.json({
+      mensaje: 'Login exitoso',
+      token,
+      usuario: {
+        id: usuario.id,
+        correo: usuario.correo
+      }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ mensaje: 'Error en el servidor' });
