@@ -4,9 +4,20 @@ const registrarCompra = async (req, res) => {
   const { usuarioId, items, total } = req.body;
 
   try {
-    const [result] = await db.execute('INSERT INTO compras (usuario_id, fecha, total) VALUES (?, NOW(), ?)', [usuarioId, total]);
+    // Validación del total
+    const parsedTotal = parseFloat(total);
+    if (isNaN(parsedTotal)) {
+      return res.status(400).json({ mensaje: 'Total inválido' });
+    }
+
+    // Inserta la compra principal
+    const [result] = await db.execute(
+      'INSERT INTO compras (usuario_id, fecha, total) VALUES (?, NOW(), ?)',
+      [usuarioId, parsedTotal]
+    );
     const compraId = result.insertId;
 
+    // Inserta los detalles de la compra
     for (const item of items) {
       await db.execute(
         'INSERT INTO detalle_compras (compra_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)',
@@ -20,6 +31,7 @@ const registrarCompra = async (req, res) => {
     res.status(500).json({ mensaje: 'Error en el servidor' });
   }
 };
+
 
 const obtenerHistorial = async (req, res) => {
   const { usuarioId } = req.params;
