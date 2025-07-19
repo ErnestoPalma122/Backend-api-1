@@ -1,10 +1,10 @@
 {
-  "name": "backend-api-1",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest"
-  },
+  "main": "server.js",
+"scripts": {
+  "start": "node server.js",
+  "test": "jest"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",
